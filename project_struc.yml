@@ -1,0 +1,19 @@
+# 项目目录流程
+root:
+    bin:
+    cache:
+    config:
+    lib:
+    mod:
+        config:
+    data:
+        raw:
+        runtime:
+    file:
+    graph:
+    report:
+    tmp:
+    trash:
+    
+    
+    
