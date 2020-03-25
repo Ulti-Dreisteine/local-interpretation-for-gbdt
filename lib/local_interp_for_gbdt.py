@@ -18,6 +18,7 @@ logging.basicConfig(level = logging.INFO)
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.tree import DecisionTreeRegressor
 import matplotlib.pyplot as plt
+import pandas as pd
 import numpy as np
 import sys
 
@@ -211,19 +212,45 @@ class LocalInterpForGBDT(object):
 		self.X_train, self.y_train = X_train, y_train
 		self.gbdt, self.tree_weights = _train_gbdt(X_train, y_train, params)
 		
-	def cal_FC_for_all_trees(self, x_test):
-		FCs = {}
+	def _cal_FC_for_all_trees(self, x_test) -> dict:
+		FC_results = {}
 		for i in range(self.gbdt.n_estimators):
 			tree_ = self.gbdt.estimators_[i, 0]
 			dti = DecisionTreeInfo(tree_)
 			dti.cal_nodes_pos_neg_counts_ratio(self.X_train, self.y_train)
-			FCs.update({i: dti.cal_FC_for_sample(x_test)})
-		return FCs
+			FC_results.update({i: dti.cal_FC_for_sample(x_test)})
+		return FC_results
+	
+	def local_interpretation(self, x_test: np.ndarray, features: list, top_n: int = None) -> (list, list):
+		# 计算每棵树上的FC值.
+		FC_results = self._cal_FC_for_all_trees(x_test)
+		
+		# 合并FC结果.
+		FC_df = pd.DataFrame.from_dict(FC_results, orient = 'index').sort_index()
+		FC_merged = pd.DataFrame(
+			np.dot(
+				self.tree_weights.reshape(1, -1), FC_df.fillna(0.0)
+			),
+			columns = FC_df.columns
+		).T
+		FC_merged.columns = ['FC_value']
+		FC_merged['feature_id'] = FC_merged.index
+		FC_merged.sort_values('FC_value', ascending = False, inplace = True)
+		FC_merged.reset_index(drop = True, inplace = True)
+		
+		if top_n is not None:
+			FC_merged = FC_merged.iloc[: top_n][:]
+		
+		# 总结结果.
+		top_features = [features[p] for p in list(FC_merged['feature_id'])]
+		top_FC_values = list(FC_merged['FC_value'])
+		
+		return top_features, top_FC_values
 	
 
 if __name__ == '__main__':
 	# %% 载入数据和处理.
-	from lib.tmp import X_train, y_train, x_test
+	from lib.tmp import X_train, y_train, features, x_test
 
 	# %% 训练GBDT模型.
 	params = {
@@ -238,28 +265,12 @@ if __name__ == '__main__':
 	}
 	self = LocalInterpForGBDT()
 	self.train_gbdt(X_train, y_train, params)
-	FCs = self.cal_FC_for_all_trees(x_test)
+	top_features, top_FC_values = self.local_interpretation(x_test, features, top_n = 10)
 	
-	
-	# y_train_pred = gbdt.predict(X_train)
-	#
-	# # 对比真实和预测值.
-	# plt.figure()
-	# plt.subplot(2, 1, 1)
-	# plt.plot(y_train)
-	# plt.subplot(2, 1, 2)
-	# plt.plot(y_train_pred)
-	#
-	# # %% 获得GBDT中的tree信息.
-	# gbdt_trees = {}
-	# for i in range(gbdt.n_estimators):
-	# 	gbdt_trees.update({i: gbdt.estimators_[i, 0]})
-	#
-	# # %% 决策树信息计算.
-	# tree = gbdt_trees[0]
-	# self = DecisionTreeInfo(tree)
-	# self.cal_nodes_pos_neg_counts_ratio(X_train, y_train)
-	
+	plt.figure()
+	plt.bar(top_features, top_FC_values)
+	plt.xticks(range(len(top_features)), top_features, rotation = 90)
+	plt.tight_layout()
 	
 
 

@@ -40,6 +40,9 @@ def build_samples():
 	X_train = pd.read_csv(os.path.join(proj_dir, 'data/raw/X_train.csv'))
 	y_train = pd.read_csv(os.path.join(proj_dir, 'data/raw/y_train.csv'))
 	
+	# 特征名.
+	features = list(X_train.columns)
+	
 	# 数据缺失值填补.
 	X_train, y_train = _fill_nans(X_train), _fill_nans(y_train)
 	
@@ -47,13 +50,13 @@ def build_samples():
 	X_train = np.array(X_train)
 	y_train = np.array(y_train).flatten()
 	
-	return X_train, y_train
+	return X_train, y_train, features
 
 
-X_train, y_train = build_samples()
+X_train, y_train, features = build_samples()
 
 # 正样本.
-pos_id = 44
+pos_id = 60
 x_test = X_train[pos_id, :].reshape(1, -1)
 
 
