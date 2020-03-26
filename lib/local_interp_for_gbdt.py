@@ -43,6 +43,20 @@ def _train_gbdt(X_train, y_train, params: dict) -> (GradientBoostingClassifier, 
 	return gbdt, tree_weights
 
 
+def _get_decision_path_matrix(tree: DecisionTreeRegressor, X: np.ndarray) -> np.ndarray:
+	"""
+	获取决策路径矩阵，路径上的节点对应值为1, 不在该路径上的节点对应值为0
+	"""
+	try:
+		X = X.reshape(-1, tree.n_features_)
+	except:
+		raise ValueError('X dim does not match n_features_')
+		
+	decision_path_matrix = tree.decision_path(X)
+	decision_path_matrix = decision_path_matrix.toarray()
+	return decision_path_matrix
+	
+
 class DecisionTreeInfo(object):
 	"""
 	决策树信息计算
@@ -54,11 +68,23 @@ class DecisionTreeInfo(object):
 	
 	def _get_nodes_connects(self) -> dict:
 		"""
-		获取父子节点连接关系, key为父节点编号, value分别对应左右分支子节点编号, -1代表没有子节点
+		获取父子节点连接关系nodes_connects, key为父节点编号, value分别对应左右分支子节点编号, -1代表没有子节点
+		:return nodes_connects: dict,
+			like {
+					parent_id_0: {'left': left_child_id_0, 'right': right_child_id_0},
+					...
+				}
 		"""
 		nodes_connects = {}
-		for i in range(self.node_count):
-			nodes_connects.update({i: {'left': self.tree.tree_.children_left[i], 'right': self.tree.tree_.children_right[i]}})
+		for node_id in range(self.node_count):
+			nodes_connects.update(
+				{
+					node_id: {
+						'left': self.tree.tree_.children_left[node_id],
+						'right': self.tree.tree_.children_right[node_id]
+					}
+				}
+			)
 		return nodes_connects
 	
 	@property
@@ -66,29 +92,56 @@ class DecisionTreeInfo(object):
 		return self._get_nodes_connects()
 	
 	def _count_nodes_samples_number(self) -> dict:
+		"""
+		获取各节点上的样本数量
+		:return nodes_samples_n: dict,
+			like {
+					node_id_0: N_0,
+					node_id_1: N_1,
+					...
+				 }
+		"""
 		nodes_samples_n = {}
-		for i in range(self.node_count):
-			nodes_samples_n.update({i: self.tree.tree_.n_node_samples[i]})
+		for node_id in range(self.node_count):
+			nodes_samples_n.update({node_id: self.tree.tree_.n_node_samples[node_id]})
 		return nodes_samples_n
 	
 	@property
 	def nodes_samples_number(self):
 		return self._count_nodes_samples_number()
 	
-	def _get_nodes_split_thres(self):
+	def _get_nodes_split_thres(self) -> dict:
+		"""
+		获取各节点用于分裂的特征值记录
+		:return nodes_split_thres: dict
+			like {
+					node_id_0: thres_0,
+					node_id_1: thres_1,
+					...
+				 }
+		"""
 		nodes_split_thres = {}
-		for i in range(self.node_count):
-			nodes_split_thres.update({i: self.tree.tree_.threshold[i]})
+		for node_id in range(self.node_count):
+			nodes_split_thres.update({node_id: self.tree.tree_.threshold[node_id]})
 		return nodes_split_thres
 	
 	@property
 	def nodes_split_thres(self):
 		return self._get_nodes_split_thres()
 	
-	def _get_nodes_split_features(self):
+	def _get_nodes_split_features(self) -> dict:
+		"""
+		获取各节点用于分裂的特征id
+		:return nodes_split_features: dict,
+			like {
+					node_id_0: feature_id_on_node_0,
+					node_id_1: feature_id_on_node_1,
+					...
+				 }
+		"""
 		nodes_split_features = {}
-		for i in range(self.node_count):
-			nodes_split_features.update({i: self.tree.tree_.feature[i]})
+		for node_id in range(self.node_count):
+			nodes_split_features.update({node_id: self.tree.tree_.feature[node_id]})
 		return nodes_split_features
 	
 	@property
@@ -97,7 +150,7 @@ class DecisionTreeInfo(object):
 	
 	def cal_nodes_pos_neg_counts_ratio(self, X_train: np.ndarray, y_train: np.ndarray):
 		"""
-		获取各节点上正负样本比例
+		获取各节点上正负样本计数和占比
 		
 		Notes:
 		------------------------------------------------------------
@@ -116,22 +169,21 @@ class DecisionTreeInfo(object):
 		
 		# 逐样本统计decision_path.
 		# 获得的decision_path_matrix为csr矩阵格式,需要转为np.ndarray, shape = (N, D).
-		decision_path_matrix_ = self.tree.decision_path(X_train)
-		decision_path_matrix_ = decision_path_matrix_.toarray()
+		decision_path_matrix_ = _get_decision_path_matrix(self.tree, X_train)
 		
 		# decision_path按照 0-1 label分别统计.
-		path_matrix_pos_ = decision_path_matrix_[list(np.argwhere(y_train == 1.0).flatten()), :]
-		path_matrix_neg_ = decision_path_matrix_[list(np.argwhere(y_train == 0.0).flatten()), :]
+		path_matrix_pos_ = decision_path_matrix_[np.argwhere(y_train == 1.0).flatten(), :]
+		path_matrix_neg_ = decision_path_matrix_[np.argwhere(y_train == 0.0).flatten(), :]
 		
-		pos_feature_counts_ = path_matrix_pos_.sum(axis = 0)
-		neg_feature_counts_ = path_matrix_neg_.sum(axis = 0)
+		pos_samples_counts_ = path_matrix_pos_.sum(axis = 0)
+		neg_samples_counts_ = path_matrix_neg_.sum(axis = 0)
 		
 		nodes_pos_neg_counts, nodes_pos_neg_ratio = {}, {}
-		for i in range(self.node_count):
-			pos_counts_, neg_counts_ = pos_feature_counts_[i], neg_feature_counts_[i]
+		for node_id in range(self.node_count):
+			pos_counts_, neg_counts_ = pos_samples_counts_[node_id], neg_samples_counts_[node_id]
 			pos_ratio_ = pos_counts_ / (pos_counts_ + neg_counts_)
-			nodes_pos_neg_counts.update({i: {'pos': pos_counts_, 'neg': neg_counts_}})
-			nodes_pos_neg_ratio.update({i: {'pos': pos_ratio_, 'neg': 1.0 - pos_ratio_}})
+			nodes_pos_neg_counts.update({node_id: {'pos': pos_counts_, 'neg': neg_counts_}})
+			nodes_pos_neg_ratio.update({node_id: {'pos': pos_ratio_, 'neg': 1.0 - pos_ratio_}})
 		
 		self.nodes_pos_neg_counts = nodes_pos_neg_counts
 		self.nodes_pos_neg_ratio = nodes_pos_neg_ratio
@@ -146,12 +198,11 @@ class DecisionTreeInfo(object):
 			raise ValueError('The dim of x_test is not equal to n_features_')
 			
 		# 首先计算decision_path.
-		decision_path_matrix_ = self.tree.decision_path(x_test)
-		decision_path_matrix_ = decision_path_matrix_.toarray()
+		decision_path_matrix_ = _get_decision_path_matrix(self.tree, x_test)
 		
 		# 获取decision_path上的节点id和相关特征id.
-		decision_node_ids_ = list(np.argwhere(decision_path_matrix_ == 1.0)[:, 1])
-		decision_features_ = [self.nodes_split_features[i] for i in decision_node_ids_]
+		decision_node_ids_ = np.argwhere(decision_path_matrix_ == 1.0)[:, 1].flatten()
+		# decision_features_ = [self.nodes_split_features[i] for i in decision_node_ids_]
 		
 		# 获取孪生children_node信息.
 		twinborn_children_ids_ = []
@@ -176,17 +227,17 @@ class DecisionTreeInfo(object):
 				features.update({parent_id_: self.nodes_split_features[parent_id_]})
 			
 			# 记录children_score.
-			for id_ in [deci_child_id_, twin_child_id_]:
-				if id_ in scores.keys():
+			for node_id in [deci_child_id_, twin_child_id_]:
+				if node_id in scores.keys():
 					pass
 				else:
-					scores.update({id_: self.nodes_pos_neg_ratio[id_]['pos']})
+					scores.update({node_id: self.nodes_pos_neg_ratio[node_id]['pos']})
 			
 			# 记录parent_score.
 			N1 = sum(self.nodes_pos_neg_counts[deci_child_id_].values())
 			N2 = sum(self.nodes_pos_neg_counts[twin_child_id_].values())
-			p_score_ = (scores[deci_child_id_] * N1 + scores[twin_child_id_] * N2) / (N1 + N2)
-			scores.update({parent_id_: p_score_})
+			parent_score_ = (scores[deci_child_id_] * N1 + scores[twin_child_id_] * N2) / (N1 + N2)
+			scores.update({parent_id_: parent_score_})
 		
 		# 计算此样本的FC值.
 		FC = {}
@@ -263,13 +314,20 @@ if __name__ == '__main__':
 		'random_state': 10,
 		'loss': 'deviance'
 	}
-	self = LocalInterpForGBDT()
-	self.train_gbdt(X_train, y_train, params)
-	top_features, top_FC_values = self.local_interpretation(x_test, features, top_n = 10)
+	local_interp_gbdt = LocalInterpForGBDT()
+	local_interp_gbdt.train_gbdt(X_train, y_train, params)
+
+	# %% 测试DecisionTreeInfo类.
+	# tree = local_interp_gbdt.gbdt.estimators_[0, 0]
+	# self = DecisionTreeInfo(tree)
 	
+	# %% 计算local interp score.
+	top_features, top_FC_values = local_interp_gbdt.local_interpretation(x_test, features, top_n = 30)
+
 	plt.figure()
 	plt.bar(top_features, top_FC_values)
-	plt.xticks(range(len(top_features)), top_features, rotation = 90)
+	plt.xticks(range(len(top_features)), top_features, rotation = 90, fontsize = 6)
+	plt.yticks(fontsize = 6)
 	plt.tight_layout()
 	
 
