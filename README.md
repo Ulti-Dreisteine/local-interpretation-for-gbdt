@@ -21,21 +21,30 @@
 *<u>GBDT</u>*：
 
 1. 初始化：
-    $s = 0$
-    $f_0 \left( x \right) = 0$
+    $$
+    s = 0
+   $$
+   
+   $$
+   f_0 \left( x \right) = 0
+   $$
    
 2. 对于所有样本$x$，计算损失函数$r_s$：
-    ```latex
+    $$
     r_s = L\left(y, \sum_{i=0}^{s}{f_s(x)} \right)
-    ```
+    $$
 
 3. 对残差$r_s$进行拟合，得到回归树$h_s$；
 
 4. 更新：
 
-   $f_{s+1}(x)=f_s(x)+h_s(x)$
+   $$
+   f_{s+1}(x)=f_s(x)+h_s(x)
+   $$
 
-   $s = s + 1$
+   $$
+   s = s + 1
+   $$
 
 5. 重复以上步骤2~4，直至满足终止条件；
 
@@ -46,8 +55,6 @@
 |    LS    |           $\frac{1}{2}\left(y_i - f(x_i)\right)^2$           |       $y_i - f(x_i)$       |
 |   LAD    |                       $|y_i - f(x_i)|$                       | ${\rm sign}(y_i - f(x_i))$ |
 |   XGB    | $\sum_{i=1}^{n}{\left[l(y_i,\hat y^{t-1}) + g_if_t(x_i) + \frac{1}{2}h_if_t^2(x_i) \right] + \Omega(f_t)}$ |             /              |
-
-
 
 
 
