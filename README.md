@@ -1,3 +1,14 @@
+<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            inlineMath: [['$','$']]
+            }
+        });
+    </script>
+</head>
 
 ### 背景
 
@@ -21,15 +32,12 @@
 <u>*GBDT*</u>：
 
 1. 初始化：
-   ```latex
-   {% raw %}
+   $$
    s = 0
-   {% endraw %}
-   ```
-
-   ```latex
+   $$
+   $$
    f_0(x)=0
-   ```
+   $$
 
 2. 对于所有样本$x$，计算损失函数$r_s$：
    $$
