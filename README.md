@@ -21,14 +21,15 @@
 *<u>GBDT</u>*：
 
 1. 初始化：
-   
-   $s=0$
-   
-   $f_0(x)=0$
+   ```latex
+   s = 0
+   f_0 \left( x \right) = 0
+   ```
    
 2. 对于所有样本$x$，计算损失函数$r_s$：
-
-   $r_s = L\left(y, \sum_{i=0}^{s}{f_s(x)}\right)$
+    ```latex
+    r_s = L\left(y, \sum_{i=0}^{s}{f_s(x)} \right)
+    ```
 
 3. 对残差$r_s$进行拟合，得到回归树$h_s$；
 
