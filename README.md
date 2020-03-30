@@ -24,7 +24,7 @@
    ```latex
    {% raw %}
    s = 0
-   {% raw %}
+   {% endraw %}
    ```
 
    ```latex
