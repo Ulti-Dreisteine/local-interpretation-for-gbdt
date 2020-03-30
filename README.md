@@ -4,8 +4,8 @@
         MathJax.Hub.Config({
             tex2jax: {
             skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-        	displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+            inlineMath: ['$','$'],
+        	displayMath: ['$$','$$']
             }
         });
     </script>
@@ -51,7 +51,7 @@
    $$
    f_{s+1}(x)=f_s(x)+h_s(x)
    $$
-   
+
    $$
    s = s + 1
    $$
