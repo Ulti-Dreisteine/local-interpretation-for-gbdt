@@ -32,28 +32,17 @@
 *<u>GBDT</u>*：
 
 1. 初始化：
-   $$\begin{align}
-       s & = 0 \\
-       f_0(x) &= 0 \\
-     \end{align}
-   $$
-   
+   $$s = 0$$
+   $$f_0(x) = 0$$
+
 2. 对于所有样本$x$，计算损失函数$r_s$：
-   $$
-   r_s = L\left(y, \sum_{i=0}^{s}{f_s(x)} \right)
-   $$
+   $$r_s = L\left(y, \sum_{i=0}^{s}{f_s(x)} \right)$$
 
 3. 对残差$r_s$进行拟合，得到回归树$h_s$；
 
 4. 更新：
-
-   $$
-   f_{s+1}(x)=f_s(x)+h_s(x)
-   $$
-
-   $$
-   s = s + 1
-   $$
+   $$f_{s+1}(x)=f_s(x)+h_s(x)$$
+   $$s = s + 1$$
 
 5. 重复以上步骤2~4，直至满足终止条件；
 
@@ -63,7 +52,7 @@
 | :------: | :----------------------------------------------------------: | :-----------------------: |
 |    LS    |           $\frac{1}{2}\left(y_i - f(x_i)\right)^2$           |      $y_i - f(x_i)$       |
 |   LAD    |                       $\|y_i - f(x_i)\|$                       | ${\rm sign} (y_i - f(x_i))$ |
-|   XGB    | $\sum_{i=1}^{n} {\left[l(y_i,\hat y^{t-1}) + g_if_t(x_i) + \frac{1}{2}h_if_t^2(x_i) \right] + \Omega(f_t)}$ |             /             |
+|   XGB    | $\sum_{i=1}^{n} {[l(y_i,\hat y^{t-1}) + g_if_t(x_i) + \frac{1}{2}h_if_t^2(x_i)] + \Omega(f_t)}$ |/|
 
 
 
@@ -71,7 +60,7 @@
 
 1. W.J. Fang, J. Zhou, etc.: Unpack Local Model Interpretation for GBDT, 2018
 
-   
+
 
 ### Jekyll主题
 
@@ -82,5 +71,3 @@ Your Pages site will use the layout and styles from the Jekyll theme you have se
 ### 联系方式
 
 - 我的邮箱：dreisteine262@163.com
-
-
