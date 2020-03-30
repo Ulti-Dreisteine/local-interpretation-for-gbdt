@@ -1,3 +1,4 @@
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
 
 ### 背景
 
@@ -28,12 +29,12 @@
    f_0(x) = 0
    $$
 
-2. 对于所有样本$x$，计算损失函数$r_s$：
+2. 对于所有样本$$x$$，计算损失函数$$r_s$$：
    $$
    r_s = L\left(y, \sum_{i=0}^{s}{f_s(x)} \right)
    $$
 
-3. 对残差$r_s$进行拟合，得到回归树$h_s$；
+3. 对残差$$r_s$$进行拟合，得到回归树$$h_s$$；
 
 4. 更新：
    $$
@@ -46,7 +47,7 @@
 
 5. 重复以上步骤2~4，直至满足终止条件；
 
-其中，GBDT的损失函数$L$可以有以下选择：
+其中，GBDT的损失函数$$L$$可以有以下选择：
 
 | Settings |                        Loss Function                         |     Negative Gradient     |
 | :------: | :----------------------------------------------------------: | :-----------------------: |
