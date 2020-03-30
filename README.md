@@ -1,15 +1,3 @@
-<head>
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-            tex2jax: {
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-            inlineMath: [['$','$'], ["\\(","\\)"]],
-        	displayMath: ['$$','$$']
-            }
-        });
-    </script>
-</head>
 
 ### 背景
 
@@ -32,27 +20,27 @@
 *<u>GBDT</u>*：
 
 1. 初始化：
-   $$
+   \$$
    s = 0
    $$
 
-   $$
+   \$$
    f_0(x) = 0
    $$
 
-2. 对于所有样本$x$，计算损失函数$r_s$：
-   $$
+2. 对于所有样本$$x$$，计算损失函数$$r_s$$：
+   \$$
    r_s = L\left(y, \sum_{i=0}^{s}{f_s(x)} \right)
    $$
 
-3. 对残差$r_s$进行拟合，得到回归树$h_s$；
+3. 对残差$$r_s$$进行拟合，得到回归树$$h_s$$；
 
 4. 更新：
-   $$
+   \$$
    f_{s+1}(x)=f_s(x)+h_s(x)
    $$
 
-   $$
+   \$$
    s = s + 1
    $$
 
