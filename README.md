@@ -47,6 +47,14 @@
 
 5. 重复以上步骤2~4，直至满足终止条件；
 
+其中，损失函数$L$可以有以下选择：
+
+| Settings |                        Loss Function                         |     Negative Gradient      |
+| :------: | :----------------------------------------------------------: | :------------------------: |
+|    LS    |           $\frac{1}{2}\left(y_i - f(x_i)\right)^2$           |       $y_i - f(x_i)$       |
+|   LAD    |                       $|y_i - f(x_i)|$                       | ${\rm sign}(y_i - f(x_i))$ |
+|   XGB    | $\sum_{i=1}^{n}{\left[l(y_i,\hat y^{t-1}) + g_if_t(x_i) + \frac{1}{2}h_if_t^2(x_i) \right] + \Omega(f_t)}$ |             /              |
+
 
 
 
