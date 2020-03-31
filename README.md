@@ -24,7 +24,6 @@
 2. 在所有特征中搜索最大增益对应的分裂特征和分裂值；
 3. 执行分裂；
 4. 重复2～3直至满足终止条件；
-5.
 
 *<u>GBDT</u>*：
 
@@ -92,8 +91,8 @@ $$
 ***
 ### 参考文献
 
-[1]: W.J. Fang, J. Zhou, etc.: Unpack Local Model Interpretation for GBDT, 2018
-[2]: https://zhuanlan.zhihu.com/p/29765582 "一文理解GBDT"
+1. W.J. Fang, J. Zhou, etc.: Unpack Local Model Interpretation for GBDT, 2018
+2. https://zhuanlan.zhihu.com/p/29765582 "一文理解GBDT"
 
 
 
