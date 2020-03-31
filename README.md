@@ -92,13 +92,53 @@ $$
 
 ***GBDT的局部解释***
 
-假设我们基于样本集$X$对目标$y$进行回归得到GBDT模型$f$，其中$X$有$N$个样本，$m$个特征，而模型$f$中的$k$个基学习器表示为$\{f_0, f_1, f_2, ..., f_k\}$，则有：  
+假设我们基于样本集$X$对目标$y$进行回归得到GBDT模型$f$，其中$X$有$N$个样本，$m$个特征，模型$f$中的$k$个基学习器可表示为$\{f_0, f_1, f_2, ..., f_k\}$，则有：  
 
 $$
-\hat y = \sum_{i=0}^{k}{f_i(x)}
+{\hat y} = \sum_{i=0}^{k}{f_i(x)}
 $$
 
-(未完待续)
+其中${\hat y}$即为GBDT预测的结果。为了对模型的个体预测进行解释，文献中参考随机森林的办法引入特征贡献（feature contribution）这一概念，计算公式如下：  
+
+$$
+LI_f^c =
+\left\{
+  \begin{aligned}
+  &Y_{\rm mean}^c - Y_{\rm mean}^p, \quad \text{if split is performed on feature {\it f}}\\
+  &0, \quad \quad \quad \quad \quad \quad \quad  \text{otherwise}
+  \end{aligned}
+\right.
+$$
+
+式中$LI_f^n$表示特征$f$在节点$n$上的局部增益，$Y_{\rm mean}^n$表示节点$n$中的正样本比例。若父节点$S_p$分裂为$S_{c1}$和$S_{c2}$两个子节点，则父节点的分数为：
+
+$$
+Y_p = \frac{N_{c1} \times Y_{c1} + N_{c2} \times Y_{c2}}{N_{c1} + N_{c2}}
+$$
+
+式中$N_{c1}、N_{c2}$分别表示落入两个子代节点$S_{c1}$和$S_{c2}$的样本数。
+
+对于随机森铃，在一棵树$t$中，特征$f$对于样本个体$i$的贡献值为:  
+
+$$
+FC_{i,t}^f = \sum_{c \in path(i)}{LI_f^c}
+$$
+
+在整个随机森林中，特征$f$对于样本个体$i$的贡献值为:
+
+$$
+FC_{i}^f = \frac{1}{k} \sum_{t=1}^{k}{FC_{i,t}^{f}}
+$$
+
+对于GBDT，特征$f$对于样本个体$i$贡献的计算公式需要修改为：  
+
+$$
+FC_{i}^f = \sum_{t=1}^{k}{w_t \cdot FC_{i,t}^{f}}
+$$
+
+式中$w_t$为基学习器$t$在整个GBDT中所占的权重，可以通过上述损失函数$L$表格获得。
+
+
 
 ***
 ### 参考文献
