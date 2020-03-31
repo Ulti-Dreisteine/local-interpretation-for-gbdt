@@ -67,13 +67,7 @@
 |   LAD    |                       $\|y_i - f(x_i)\|$                      | ${\rm sign} (y_i - f(x_i))$ |
 |   XGB    | $\sum_{i=1}^{n} {[l(y_i,\hat y^{t-1}) + g_if_t(x_i) + \frac{1}{2}h_if_t^2(x_i)] + \Omega(f_t)}$ |/|
 |Absolute |$\vert y_i - f(x_i)\vert $|/|
-|Huber|$
-\begin{equation}
-\begin{aligned}
-&\frac{1}{2}(y_i - f(x_i))^2, \quad \vert y_i -f(x_i) \vert \leq \delta\\
-&\delta(\vert y_i - f(x_i) \vert - \frac{\sigma}{2}), \quad \vert y_i - f(x_i) \vert > \delta\\ 
-\end{aligned}
-\end{equation}$|/|
+|Huber|$\frac{1}{2}(y_i - f(x_i))^2, \quad \vert y_i -f(x_i) \vert \leq \delta  \\ \delta(\vert y_i - f(x_i) \vert \frac{\sigma}{2}), \quad \vert y_i - f(x_i) \vert > \delta$|/|
 
 注意：
 * 基于残差的GBDT在解决回归问题上不是好的选择，因为对异常值过于敏感，一般回归类损失函数会选用绝对损失函数或者huber损失函数来代替平方损失函数[2]。  
