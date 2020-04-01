@@ -8,6 +8,8 @@
 </script>
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
+
+
 ![封面](img/golf-MSE.png)
 
 
@@ -45,7 +47,7 @@
 2. 对于所有样本$x$，计算损失函数$r_s$：  
 
    $$
-   r_s = L\left(y, \sum_{i=0}^{s}{f_s(x)} \right)
+   r_s = L\left(y, \sum_{i=0}^{s}{f_i(x)} \right)
    $$
 
 3. 对残差$r_s$进行拟合，得到回归树$h_s$；
@@ -122,7 +124,7 @@ $$
 
 式中$N_{c1}、N_{c2}$分别表示落入两个子代节点$S_{c1}$和$S_{c2}$的样本数。
 
-对于随机森铃，在一棵树$t$中，特征$f$对于样本个体$i$的贡献值为:  
+对于随机森林，在一棵树$t$中，特征$f$对于样本个体$i$的贡献值为:  
 
 $$
 FC_{i,t}^f = \sum_{c \in path(i)}{LI_f^c}
