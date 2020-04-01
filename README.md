@@ -9,7 +9,7 @@
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 ***
-<img src="https://raw.githubusercontent.com/Ulti-Dreisteine/local-interpretation-for-gbdt/master/img/golf-MSE.png" width=600 height=350 alt="封面" align="center">
+<img src="https://ulti-dreisteine.github.io/local-interpretation-for-gbdt/img/golf-MSE.png" width=600 height=350 alt="封面" align="center">
 
 ***
 ## 算法背景
