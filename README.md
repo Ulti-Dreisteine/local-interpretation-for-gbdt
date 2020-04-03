@@ -13,6 +13,8 @@
 ![封面](img/golf-MSE.png)
 
 
+# GBDT模型的局部解释
+## Local Model Interpretation for GBDT
 
 ***
 ## 算法背景
