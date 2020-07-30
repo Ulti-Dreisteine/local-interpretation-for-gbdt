@@ -231,7 +231,8 @@ class DecisionTreeInfo(object):
 				if node_id in scores.keys():
 					pass
 				else:
-					scores.update({node_id: self.nodes_pos_neg_ratio[node_id]['pos']})
+					# scores.update({node_id: self.nodes_pos_neg_ratio[node_id]['pos']})  # 使用子节点正样本比例做为分数
+					scores.update({node_id: self.tree.tree_.value[node_id]})              # 使用子节点的value做为分数
 			
 			# 记录parent_score.
 			N1 = sum(self.nodes_pos_neg_counts[deci_child_id_].values())
