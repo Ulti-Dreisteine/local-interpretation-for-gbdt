@@ -117,7 +117,6 @@ if __name__ == '__main__':
 		'loss': 'deviance',
 	}
 	self.train_model(**params)
-	# plt.plot(self.tree_weights)
 	
 	FC_results = self._cal_FC_for_all_trees(x_test)
 	top_features, top_FC_values = self.local_interpretation(x_test, features)
