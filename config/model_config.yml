@@ -1,0 +1,28 @@
+# ============ 日志配置 ============
+logging:
+    version: 1
+    formatters:
+        simpleFormater:
+            format: '%(asctime)s - %(levelname)s - %(name)s[line:%(lineno)d]: %(message)s'
+            datefmt: '%Y-%m-%d %H:%M:%S'
+    handlers:
+        console_handler:
+            level: DEBUG
+            class: logging.StreamHandler
+            formatter: simpleFormater
+            stream: ext://sys.stdout
+        info_handler:
+            level: INFO
+            class: logging.FileHandler
+            formatter: simpleFormater
+            filename: ../logs/web_info.logs
+            encoding: utf8
+        error_handler:
+            level: ERROR
+            class: logging.FileHandler
+            formatter: simpleFormater
+            filename: ../logs/web_error.logs
+            encoding: utf8
+    root:
+        level: INFO
+        handlers: [console_handler, info_handler, error_handler]

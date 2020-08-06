@@ -19,9 +19,9 @@ import sys, os
 
 sys.path.append('../')
 
-from mod.config.config_loader import config
+from mod.config.config_loader import config_loader
 
-proj_dir, proj_cmap = config.proj_dir, config.proj_cmap
+proj_dir, proj_cmap = config_loader.proj_dir, config_loader.proj_cmap
 
 
 
