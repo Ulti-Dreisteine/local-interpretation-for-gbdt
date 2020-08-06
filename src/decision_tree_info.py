@@ -229,7 +229,12 @@ class DecisionTreeInfo(object):
 				if node_id in scores.keys():
 					pass
 				else:
+					# ------------ TODO: 这里需要查阅GBDT如何计算node score的.
+					# <<<<<<<<<<<< 旧代码
 					scores[node_id] = nodes_labels_ratio[node_id][1]  # 使用子节点正样本比例做为分数
+					# >>>>>>>>>>>> from the pull request
+					# scores[node_id] = self.tree.tree_.value[node_id, 0, 0]  # 使用子节点的value做为分数
+					# ------------
 					
 			# 记录parent_score.
 			N1 = sum(nodes_labels_counts[_deci_child_id].values())
