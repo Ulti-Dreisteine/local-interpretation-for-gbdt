@@ -20,9 +20,11 @@ logging.basicConfig(level = logging.INFO)
 import logging.config
 import logging
 import yaml
-import sys, os
+import sys
+import os
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
+BASE_DIR = os.path.abspath(os.path.join(os.path.abspath(__file__), '../../../'))
+sys.path.append(BASE_DIR)
 
 _color_map = {
 	'white': 'w',

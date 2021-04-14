@@ -17,6 +17,7 @@ import logging
 
 logging.basicConfig(level = logging.INFO)
 
+from typing import Tuple
 from sklearn.ensemble import GradientBoostingClassifier
 import pandas as pd
 import numpy as np
@@ -27,7 +28,7 @@ sys.path.append('../')
 from src.decision_tree_info import DecisionTreeInfo
 
 
-def train_model(X_train: np.ndarray, y_train: np.ndarray, **params) -> (GradientBoostingClassifier, np.ndarray):
+def train_model(X_train: np.ndarray, y_train: np.ndarray, **params) -> Tuple[GradientBoostingClassifier, np.ndarray]:
 	"""训练模型并计算各子模型权重"""
 	# 初始化并训练模型.
 	clf = GradientBoostingClassifier(**params)
@@ -66,7 +67,7 @@ class LocalInterpForGBDT(object):
 			FC_results[i] = FC
 		return FC_results
 	
-	def local_interpretation(self, x_test: np.ndarray, features: list, top_n: int = None) -> (list, list):
+	def local_interpretation(self, x_test: np.ndarray, features: list, top_n: int = None) -> Tuple[list, list]:
 		# 计算每棵树上的FC值.
 		FC_results = self._cal_FC_for_all_trees(x_test)
 		
