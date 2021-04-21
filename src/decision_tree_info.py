@@ -256,8 +256,11 @@ class DecisionTreeInfo(object):
 
 if __name__ == '__main__':
 	from sklearn.ensemble import GradientBoostingClassifier
+	import sys
+	import os
 	
-	# ---- 载入数据和处理 ---------------------------------------------------------------------------
+	BASE_DIR = os.path.abspath(os.path.join(os.path.abspath(__file__), '../../'))
+	sys.path.append(BASE_DIR)
 	
 	from test_script.local_test import X_train, y_train, x_test
 	
@@ -283,7 +286,7 @@ if __name__ == '__main__':
 	
 	self = DecisionTreeInfo(tree)
 	nodes_labels_counts, nodes_labels_ratio = self.cal_nodes_labels_counts_ratio(X_train, y_train)
-	FC = self.cal_FC_for_sample(x_test, nodes_labels_counts, nodes_labels_ratio)
+	# FC = self.cal_FC_for_sample(x_test, nodes_labels_counts, nodes_labels_ratio)
 
 
 
