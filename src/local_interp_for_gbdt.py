@@ -13,17 +13,15 @@ Created on 2020/8/5 5:25 下午
 @Describe: GBDT的局部解释模型
 """
 
-import logging
-
-logging.basicConfig(level = logging.INFO)
-
-from typing import Tuple
 from sklearn.ensemble import GradientBoostingClassifier
+from typing import Tuple
 import pandas as pd
 import numpy as np
 import sys
+import os
 
-sys.path.append('../')
+BASE_DIR = os.path.abspath(os.path.join(os.path.abspath(__file__), '../../'))
+sys.path.append(BASE_DIR)
 
 from src.decision_tree_info import DecisionTreeInfo
 
