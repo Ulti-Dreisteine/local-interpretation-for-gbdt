@@ -215,7 +215,7 @@ class DecisionTreeInfo(object):
         :param X_train: 训练集特征X
         :param y_train: 训练集目标y
 
-        Notes:
+        TODO:
             目前这一步还需要X_train, y_train正向计算, 按理说当训练tree的时候就应该能
             获得节点上的正负样本信息, 但目前从sklearn代码中没有找到接口
         """
